@@ -9,4 +9,8 @@ function get_index() {
     )
   );
 }
+
+function get_gone() {
+  
+}
 ?>

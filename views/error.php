@@ -4,7 +4,7 @@
   <div class="col-lg-12">
     <h2>There was an error</h2>
     <div class="alert alert-danger" role="alert">
-      {{$message}}
+      {{{$message}}}
     </div>
   </div>
 </div>
