@@ -40,7 +40,7 @@ function url($url) {
 function __importTemplate($matches) {
   $fileName = trim($matches[1]);
   if (!file_exists($fileName)) {
-    die("Template $fileName doesn't exist.");
+    errorPage(404, "Template '$fileName' does not exist. Did you create it?");
   }
   $contents = file_get_contents($fileName);
   $contents = preg_replace_callback('/%%\s*(.*)\s*%%/', '__importTemplate', $contents);
@@ -58,22 +58,11 @@ function __cacheName($view) {
   return implode('/', $cachePath);
 }
 
-function checked(&$something, $compare) {
-  if (isset($something) && (is_array($something) && in_array($compare, $something) || $something == $compare)) {
-    return "checked";
-  }
-  return "";
-}
-
-function value(&$something, $default = "") {
-  return isset($something) ? $something : $default;
-}
-
 function renderTemplate($view, $params) {
   $useCache = false;
 
   if (!file_exists($view)) {
-    die("File $view doesn't exist.");
+    errorPage(404, "View file '$view' does not exist. Did you create it?");
   }
   # do we have a cached version?
   clearstatcache();
@@ -151,4 +140,22 @@ function time2str($ts) {
   }
 }
 
+function flash($message) {
+  if (!isset($_SESSION['flash'])) {
+    $_SESSION['flash'] = "";
+  }
+  $_SESSION['flash'] .= $message . '<br />';
+}
+
+function errorPage($code, $message) {
+  http_response_code($code);
+  renderTemplate(
+    "views/error.php",
+    array(
+      'title' => "$code Error",
+      'message' => $message,
+    )
+  );
+  die();
+}
 ?>

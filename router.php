@@ -1,4 +1,6 @@
 <?php
+require_once 'include/config.php';
+require_once 'include/util.php';
 
 function routeUrl() {
   $method = $_SERVER['REQUEST_METHOD'];
@@ -18,12 +20,12 @@ function routeUrl() {
   $params = array_slice($entity, 2);
 
   if (!file_exists($controller)) {
-    die("Controller '$controller' doesn't exist.");
+    errorPage(404, "Controller '$controller' doesn't exist. Did you create it?");
   }
 
   require $controller;
   if (!function_exists($func)) {
-    die("Function '$func' doesn't exist.");
+    errorPage(404, "Function '$func' doesn't exist in controller '$controller'. Did you create it?");
   }
 
   call_user_func_array($func, $params);
